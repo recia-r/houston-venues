@@ -63,7 +63,7 @@
 
                             // Add an info window for each marker.
                             const infoWindow = new google.maps.InfoWindow({
-                                content: `<h3>${location.name}</h3>`
+                                content: `<h3>${location.name}</h3> <h3>${location.notes}</h3>`
                             });
 
                             marker.addListener("click", () => {

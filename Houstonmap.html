@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Google Maps Locations</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDC2UZ21CWrPfX9qprMGnvfkoXeKvNMFqI&libraries=places" defer></script>
+    <script>
+        // Replace YOUR_API_KEY with your actual API key.
+
+        // Your array of locations.
+        const locations = [
+            { type: "Restaurant", name: "Uchi", neighborhood: "Montrose", notes: "Sushi - Most expensive, considered the best", lat: 29.7427, lng: -95.3968 },
+            { type: "Restaurant", name: "Kata Robata", neighborhood: "Upper Kirby", notes: "Sushi - High quality, more moderate pricing", lat: 29.7364, lng: -95.4178 },
+            { type: "Restaurant", name: "Hugo's", neighborhood: "Montrose", notes: "Mexican cuisine", lat: 29.7445, lng: -95.3915 },
+            { type: "Restaurant", name: "Cadillac Bar", neighborhood: "Independence Heights", notes: "Mexican cuisine", lat: 29.7927, lng: -95.3688 },
+            { type: "Restaurant", name: "Marmo", neighborhood: "Montrose", notes: "Italian cuisine", lat: 29.7427, lng: -95.3968 },
+            { type: "Restaurant", name: "Hearsay", neighborhood: "Downtown", notes: "Gastro lounge", lat: 29.7604, lng: -95.3698 },
+            { type: "Restaurant", name: "Postino", neighborhood: "", notes: "", lat: 29.7427, lng: -95.3968 },
+            { type: "Restaurant", name: "Khamsa", neighborhood: "Rice Village", notes: "Moroccan", lat: 29.7174, lng: -95.4148 },
+            { type: "Restaurant", name: "Kasra", neighborhood: "Rice Village", notes: "Persian", lat: 29.7174, lng: -95.4148 },
+            { type: "Bar", name: "Refuge", neighborhood: "Montrose", notes: "Cocktail bar", lat: 29.7427, lng: -95.3968 },
+            { type: "Bar", name: "Boheme", neighborhood: "Montrose", notes: "Bohemian atmosphere", lat: 29.7427, lng: -95.3968 },
+            { type: "Bar", name: "Barbarellas", neighborhood: "Midtown", notes: "80s themed, open 10pm-2am", lat: 29.7447, lng: -95.3787 },
+            { type: "Bar", name: "Avant Garden", neighborhood: "Montrose", notes: "Converted house-turned-bar, local staple, less busy now", lat: 29.7427, lng: -95.3968 },
+            { type: "Bar", name: "Bad News Bar", neighborhood: "Downtown/Main St", notes: "Speakeasy with balcony overlooking Main Street", lat: 29.7604, lng: -95.3698 },
+            { type: "Beer garden", name: "West Alabama Ice House", neighborhood: "Montrose", notes: "Traditional Texas-style beer garden, good for happy hours", lat: 29.7427, lng: -95.3968 },
+            { type: "Beer garden", name: "Kirby Ice House", neighborhood: "Upper Kirby", notes: "Beer garden, popular for happy hours", lat: 29.7364, lng: -95.4178 },
+            { type: "Lively Bar", name: "McEntyres", neighborhood: "Heights", notes: "Crowded, clubby atmosphere, active after 10pm", lat: 29.7898, lng: -95.3963 },
+            { type: "Lively Bar", name: "Austin's Backyard", neighborhood: "Heights", notes: "Crowded, clubby atmosphere, active after 10pm", lat: 29.7898, lng: -95.3963 },
+            { type: "Lively Bar", name: "Heights Social", neighborhood: "Heights", notes: "Crowded, clubby atmosphere, active after 10pm", lat: 29.7898, lng: -95.3963 },
+            { type: "Brewery", name: "Saint Arnold Brewery", neighborhood: "Heights", notes: "Major Houston brewery", lat: 29.7898, lng: -95.3963 },
+            { type: "Brewery", name: "Eighth Wonder Brewery", neighborhood: "EaDo", notes: "EaDo - artsy/industrial feel with a younger crowd", lat: 29.7508, lng: -95.3555 },
+            { type: "Brewery", name: "Karbach Brewing", neighborhood: "Heights", notes: "", lat: 29.7898, lng: -95.3963 }
+        ];
+
+        // Initialize and add the map.
+        function initMap() {
+            // The map, centered at the first location in the array.
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 4,
+                center: { lat: locations[0].lat, lng: locations[0].lng },
+            });
+
+            var service = new google.maps.places.PlacesService(map);
+
+
+
+            // Add markers for each location.
+            locations.forEach(location => {
+
+                service.findPlaceFromQuery({
+                    query: location.name + " Houston",
+                    fields: ['name', 'geometry'],
+                }, function (results, status) {
+                    if (status === google.maps.places.PlacesServiceStatus.OK) {
+                        for (var i = 0; i < results.length; i++) {
+                            const place = results[i]
+                            const marker = new google.maps.Marker({
+                                position: place.geometry.location,
+                                map: map,
+                                title: location.name,
+                            });
+
+                            // Add an info window for each marker.
+                            const infoWindow = new google.maps.InfoWindow({
+                                content: `<h3>${location.name}</h3>`
+                            });
+
+                            marker.addListener("click", () => {
+                                infoWindow.open(map, marker);
+                            });
+                        }
+                        map.setCenter(results[0].geometry.location);
+                    }
+                });
+
+                /*
+                const marker = new google.maps.Marker({
+                    position: { lat: location.lat, lng: location.lng },
+                    map: map,
+                    title: location.name,
+                });
+
+                // Add an info window for each marker.
+                const infoWindow = new google.maps.InfoWindow({
+                    content: `<h3>${location.name}</h3>`
+                });
+
+                marker.addListener("click", () => {
+                    infoWindow.open(map, marker);
+                });
+                */
+            });
+        }
+    </script>
+
+    <style>
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body onload="initMap()">
+    <div id="map"></div>
+</body>
+
+</html>
